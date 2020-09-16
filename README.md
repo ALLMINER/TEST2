@@ -1,5 +1,5 @@
 # TEST2
 
-git clone https://github.com/ALLMINER/TEST2
-cd TEST2
-docker-compose up -d
+git clone https://github.com/ALLMINER/TEST2  <br />
+cd TEST2 <br />
+docker-compose up -d <br />
