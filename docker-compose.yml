@@ -3,7 +3,6 @@ version: '2.1'
 networks:
   monitor-net:
     driver: bridge
-
 volumes:
     prometheus_data: {}
     grafana_data: {}
@@ -121,6 +120,7 @@ services:
       - "9090:9090"
       - "9093:9093"
       - "9091:9091"
+      - "9115:9115"
     volumes:
       - ./caddy:/etc/caddy
     environment:
@@ -131,3 +131,22 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+  
+  blackbox-exporter:
+    image: prom/blackbox-exporter:${BLACKBOX_EXPORTER_VERSION}
+    container_name: blackbox-exporter
+    volumes:
+      - ./blackbox-exporter/:/config/
+    command:
+      - '--config.file=/config/blackbox.yml'
+    restart: unless-stopped
+    networks:
+      - monitor-net
+    expose:
+      - 9115
+    mem_limit: ${BLACKBOX_EXPORTER_MEM_LIMIT}
+    mem_reservation: ${BLACKBOX_EXPORTER_MEM_RESERVATION}
+    logging:
+        driver: "json-file"
+        options:
+          max-size: "5m"
